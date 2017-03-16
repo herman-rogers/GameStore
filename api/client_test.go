@@ -17,7 +17,7 @@ func TestServerStatusReturnsOK(t *testing.T) {
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
-	testutils.AuthenticateRoute(r)
+	testutils.AuthenticateJWTRoute(r)
 
 	w := httptest.NewRecorder()
 	cli.Handler.ServeHTTP(w, r)
@@ -34,18 +34,3 @@ func TestServerStatusReturnsOK(t *testing.T) {
 		t.Errorf("Expected %v, but got %v", "Status OK", resp.Status)
 	}
 }
-
-// func TestServerReturnsUnauthorizedAccess(t *testing.T) {
-// 	cli := Start()
-
-// 	r, err := http.NewRequest("GET", ServerStatus, nil)
-// 	if err != nil {
-// 		t.Fatalf(err.Error())
-// 	}
-// 	w := httptest.NewRecorder()
-// 	cli.Handler.ServeHTTP(w, r)
-
-// 	if w.Code != http.StatusUnauthorized {
-// 		t.Errorf("Expected %v, but got %v", http.StatusUnauthorized, w.Code)
-// 	}
-// }

@@ -1,7 +1,7 @@
 package config
 
-// JWTClientSecret is the secret key for authenticating tokens
-const JWTClientSecret string = "JWT_CLIENT_SECRET"
+// ClientSecret is the secret key for authenticating tokens
+const ClientSecret string = "CLIENT_SECRET"
 
 // FBClientID is the client id for auth with Facebook
 const FBClientID string = "FACEBOOK_CLIENT_ID"
