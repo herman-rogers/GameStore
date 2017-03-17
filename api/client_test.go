@@ -7,7 +7,7 @@ import (
 
 	"encoding/json"
 
-	"github.com/Gamebuildr/Hal/pkg/testutils"
+	"github.com/WestCoastOpenSource/GameStore/pkg/testutils"
 )
 
 func TestServerStatusReturnsOK(t *testing.T) {

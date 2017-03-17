@@ -12,5 +12,7 @@ func main() {
 	client := api.Start()
 
 	fmt.Printf("GameStore running on port :3000")
-	http.ListenAndServe(":3000", client.Handler)
+	if err := http.ListenAndServe(":3000", client.Handler); err != nil {
+		fmt.Printf(err.Error())
+	}
 }
