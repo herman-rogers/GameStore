@@ -8,9 +8,9 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
-// GetMockToken setups an test environment for mocking auth api calls
-func GetMockToken(tokenValue string) (string, error) {
-	os.Setenv(config.JWTClientSecret, "secret")
+// GetJWTToken setups an test environment for mocking auth api calls
+func GetJWTToken(tokenValue string) (string, error) {
+	os.Setenv(config.ClientSecret, "secret")
 
 	secretKey := []byte(tokenValue)
 	token := jwt.New(jwt.SigningMethodHS256)
@@ -21,9 +21,9 @@ func GetMockToken(tokenValue string) (string, error) {
 	return tokenString, nil
 }
 
-// AuthenticateRoute will setup a route with token authentification
-func AuthenticateRoute(r *http.Request) error {
-	token, err := GetMockToken("secret")
+// AuthenticateJWTRoute will setup a route with token authentification
+func AuthenticateJWTRoute(r *http.Request) error {
+	token, err := GetJWTToken("secret")
 	if err != nil {
 		return err
 	}

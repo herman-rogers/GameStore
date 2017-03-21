@@ -14,7 +14,7 @@ const missingSecretKey string = "Missing Auth0 Client Secret"
 // JWTAuthMiddleware is the route middleware for jwt authentication
 var JWTAuthMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
 	ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
-		secret := []byte(os.Getenv(config.JWTClientSecret))
+		secret := []byte(os.Getenv(config.ClientSecret))
 		if len(secret) == 0 {
 			return nil, errors.New(missingSecretKey)
 		}

@@ -21,7 +21,7 @@ func TestRouteIsValidatedBySpecifiedToken(t *testing.T) {
 	mockRouter.Handle(mockURL, JWTAuthMiddleware.Handler(mockAuthRoute()))
 
 	r, err := http.NewRequest("POST", mockURL, nil)
-	testutils.AuthenticateRoute(r)
+	testutils.AuthenticateJWTRoute(r)
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
@@ -34,7 +34,7 @@ func TestRouteIsValidatedBySpecifiedToken(t *testing.T) {
 }
 
 func TestRouteIsDeniedAccessIfTokenIncorrect(t *testing.T) {
-	token, err := testutils.GetMockToken("wrongkey")
+	token, err := testutils.GetJWTToken("wrongkey")
 	if err != nil {
 		t.Fatalf(err.Error())
 	}

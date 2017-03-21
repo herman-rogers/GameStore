@@ -1,4 +1,3 @@
-
 package api
 
 // ServerStatus checks the current status of the server
