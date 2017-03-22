@@ -2,11 +2,12 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/WestCoastOpenSource/GameStore/pkg/auth"
+	"github.com/WestCoastOpenSource/GameStore/pkg/logger"
+	"github.com/go-errors/errors"
 	"github.com/patrickmn/go-cache"
 )
 
@@ -14,6 +15,7 @@ import (
 type Client struct {
 	Handler *http.ServeMux
 	Cache   *cache.Cache
+	Logger  logger.Log
 }
 
 // Response is a generic struct to format and return jsonified data
@@ -28,9 +30,14 @@ const facebookAccessURL string = "https://graph.facebook.com/me?access_token="
 
 // Start creates and returns a new server Client
 func Start() *Client {
+	logSystem := logger.FileSystemLogs{
+		File:      "gamestore_client_",
+		Directory: "/var/log/gamestore/",
+	}
 	client := Client{
 		Handler: http.NewServeMux(),
 		Cache:   cache.New(60*time.Minute, 30*time.Second),
+		Logger:  &logSystem,
 	}
 
 	client.addRoutes()
@@ -39,6 +46,7 @@ func Start() *Client {
 
 func (cli Client) addRoutes() {
 	sha := auth.SHA256Middleware{}
+	cli.Logger.Error(errors.Errorf("Test Error Format"))
 	cli.Handler.Handle(ServerStatus, cli.serverStatusHandler())
 	cli.Handler.Handle(FacebookCallback, cli.handleFacebookCallback())
 	cli.Handler.Handle(FacebookLogin, cli.handleFacebookLogin())
@@ -52,7 +60,8 @@ func (cli Client) serverStatusHandler() http.Handler {
 		w.Header().Set("Content-Type", "application/json")
 		resp, err := json.Marshal(Response{Status: "Server OK"})
 		if err != nil {
-			fmt.Printf(err.Error())
+			cli.Logger.Error(err)
+			return
 		}
 		w.Write(resp)
 	})
