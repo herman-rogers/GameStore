@@ -9,8 +9,11 @@ const FacebookLogin = "/api/facebooklogin"
 // FacebookCallback is the callback url that login verification / user details
 const FacebookCallback = "/api/facebookcallback"
 
-// FacebookLoginPage displays facebook login status to user
-const FacebookLoginPage = "/api/facebookpage"
+// FacebookLoginSuccess displays facebook login success page
+const FacebookLoginSuccess = "/api/facebooksuccess"
+
+// FacebookLoginFailed displays facebook login failure page
+const FacebookLoginFailed = "/api/facebookfailure"
 
 // GetFacebookData is an api url to get user facebook data from cache
 // Requires user login verification, device identifier, and SHA256 key id

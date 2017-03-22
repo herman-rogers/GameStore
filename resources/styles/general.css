@@ -1,0 +1,33 @@
+body {
+    margin: 0 auto;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #247fa2;
+    color: #ff9b00;
+    font-size: 1em;
+    text-shadow:
+    -1px -1px 0 #0e313f,
+    1px -1px 0 #0e313f,
+    -1px 1px 0 #0e313f,
+    1px 1px 0 #0e313f;
+}
+
+.rees-logo {
+    text-align: center;
+}
+
+.title {
+    text-align: center;
+    font-size: 200%;
+}
+
+.title-success {
+    text-align: center;
+    font-size: 200%;
+    color: #fff;
+}
+
+.title-failure {
+    text-align: center;
+    font-size: 200%;
+    color: #FF7343;
+}

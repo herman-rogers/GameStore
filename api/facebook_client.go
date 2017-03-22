@@ -14,20 +14,17 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// Remove and Replace
-const htmlIndex = `<html><body>
-Logged in with <a href="/login">facebook</a>
-</body></html>
-`
-
-func (cli Client) handleFacebookLoginPage() http.Handler {
+func (cli Client) handleFacebookLoginSuccess() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		w.WriteHeader(http.StatusOK)
-		_, err := w.Write([]byte(htmlIndex))
-		if err != nil {
-			fmt.Printf(err.Error())
-		}
+		http.ServeFile(w, r, "./templates/login_success.html")
+	})
+}
+
+func (cli Client) handleFacebookLoginFailed() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		http.ServeFile(w, r, "./templates/login_failure.html")
 	})
 }
 
@@ -62,6 +59,7 @@ func (cli Client) handleFacebookCallback() http.Handler {
 
 		if state != facebook.OathStateString {
 			cli.errorRedirect(w, r, "Invalid Auth State")
+			return
 		}
 
 		code := r.FormValue("code")
@@ -101,7 +99,7 @@ func (cli Client) handleFacebookCallback() http.Handler {
 
 		// Set token in cache
 		cli.Cache.Set(facebook.OathStateString, response, cache.DefaultExpiration)
-		http.Redirect(w, r, FacebookLoginPage, http.StatusTemporaryRedirect)
+		http.Redirect(w, r, FacebookLoginSuccess, http.StatusTemporaryRedirect)
 	})
 }
 
@@ -129,5 +127,5 @@ func (cli Client) deleteFacebookData() http.Handler {
 
 func (cli Client) errorRedirect(w http.ResponseWriter, r *http.Request, err string) {
 	fmt.Printf("Facebook Callback Error: %v", err)
-	http.Redirect(w, r, FacebookLoginPage, http.StatusTemporaryRedirect)
+	http.Redirect(w, r, FacebookLoginFailed, http.StatusTemporaryRedirect)
 }
