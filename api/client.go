@@ -47,12 +47,20 @@ func Start() *Client {
 func (cli Client) addRoutes() {
 	sha := auth.SHA256Middleware{}
 	cli.Logger.Error(errors.Errorf("Test Error Format"))
+
+	// API Routes
 	cli.Handler.Handle(ServerStatus, cli.serverStatusHandler())
 	cli.Handler.Handle(FacebookCallback, cli.handleFacebookCallback())
 	cli.Handler.Handle(FacebookLogin, cli.handleFacebookLogin())
-	cli.Handler.Handle(FacebookLoginPage, cli.handleFacebookLoginPage())
 	cli.Handler.Handle(GetFacebookData, sha.Handler(cli.getFacebookData()))
 	cli.Handler.Handle(DeleteFacebookData, sha.Handler(cli.deleteFacebookData()))
+
+	// Template Routes
+	cli.Handler.Handle(FacebookLoginSuccess, cli.handleFacebookLoginSuccess())
+	cli.Handler.Handle(FacebookLoginFailed, cli.handleFacebookLoginFailed())
+
+	// Resources
+	cli.Handler.Handle("/resources/", http.StripPrefix("/resources/", http.FileServer(http.Dir("resources"))))
 }
 
 func (cli Client) serverStatusHandler() http.Handler {
