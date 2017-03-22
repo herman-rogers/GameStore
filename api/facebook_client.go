@@ -2,14 +2,13 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
 
 	"github.com/WestCoastOpenSource/GameStore/pkg/facebook"
+	"github.com/go-errors/errors"
 	cache "github.com/patrickmn/go-cache"
 	"golang.org/x/oauth2"
 )
@@ -36,7 +35,8 @@ func (cli Client) handleFacebookLogin() http.Handler {
 
 		URL, err := url.Parse(config.Endpoint.AuthURL)
 		if err != nil {
-			log.Fatal("Facebook Login Parse URL: ", err)
+			cli.systemErrorRedirect(w, r, err)
+			return
 		}
 
 		parameters := url.Values{}
@@ -58,20 +58,21 @@ func (cli Client) handleFacebookCallback() http.Handler {
 		state := r.FormValue("state")
 
 		if state != facebook.OathStateString {
-			cli.errorRedirect(w, r, "Invalid Auth State")
+			cli.systemErrorRedirect(w, r, errors.Errorf("Invalid Oath State String: "))
 			return
 		}
 
 		code := r.FormValue("code")
 		token, err := facebook.AuthConfig.Exchange(oauth2.NoContext, code)
 		if err != nil {
-			cli.errorRedirect(w, r, err.Error())
+			cli.Logger.Error("User Cancelled Facebook Verification. Callback Data: " + err.Error())
+			http.Redirect(w, r, FacebookLoginFailed, http.StatusTemporaryRedirect)
 			return
 		}
 
 		resp, err := http.Get(facebookAccessURL + url.QueryEscape(token.AccessToken))
 		if err != nil {
-			cli.errorRedirect(w, r, err.Error())
+			cli.systemErrorRedirect(w, r, err)
 			return
 		}
 
@@ -79,13 +80,13 @@ func (cli Client) handleFacebookCallback() http.Handler {
 
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			cli.errorRedirect(w, r, err.Error())
+			cli.systemErrorRedirect(w, r, err)
 			return
 		}
 
 		data := &Response{}
 		if err = json.Unmarshal(body, data); err != nil {
-			cli.errorRedirect(w, r, err.Error())
+			cli.systemErrorRedirect(w, r, err)
 			return
 		}
 
@@ -93,7 +94,7 @@ func (cli Client) handleFacebookCallback() http.Handler {
 
 		response, err := json.Marshal(data)
 		if err != nil {
-			cli.errorRedirect(w, r, err.Error())
+			cli.systemErrorRedirect(w, r, err)
 			return
 		}
 
@@ -125,7 +126,7 @@ func (cli Client) deleteFacebookData() http.Handler {
 	})
 }
 
-func (cli Client) errorRedirect(w http.ResponseWriter, r *http.Request, err string) {
-	fmt.Printf("Facebook Callback Error: %v", err)
+func (cli Client) systemErrorRedirect(w http.ResponseWriter, r *http.Request, err error) {
+	cli.Logger.ErrorStackTrace("Facebook Login Error: ", errors.Wrap(err, 1))
 	http.Redirect(w, r, FacebookLoginFailed, http.StatusTemporaryRedirect)
 }
