@@ -1,24 +1,24 @@
-package api
+package client
 
 // ServerStatus checks the current status of the server
-const ServerStatus = "/api/status"
+const ServerStatus = "/api/server/status"
 
 // FacebookLogin calls the FB api and initiates login request
-const FacebookLogin = "/api/facebooklogin"
+const FacebookLogin = "/api/facebook/login"
 
 // FacebookCallback is the callback url that login verification / user details
-const FacebookCallback = "/api/facebookcallback"
+const FacebookCallback = "/api/facebook/callback"
 
 // FacebookLoginSuccess displays facebook login success page
-const FacebookLoginSuccess = "/api/facebooksuccess"
+const FacebookLoginSuccess = "/api/facebook/success"
 
 // FacebookLoginFailed displays facebook login failure page
-const FacebookLoginFailed = "/api/facebookfailure"
+const FacebookLoginFailed = "/api/facebook/failure"
 
 // GetFacebookData is an api url to get user facebook data from cache
 // Requires user login verification, device identifier, and SHA256 key id
-const GetFacebookData = "/api/facebookdata"
+const GetFacebookData = "/api/facebook/data"
 
 // DeleteFacebookData is an api url to remove user from token cache
 // Requires user login verification, device identifier, and SHA256 key id
-const DeleteFacebookData = "/api/facebookdelete"
+const DeleteFacebookData = "/api/facebook/delete"

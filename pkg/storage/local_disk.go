@@ -7,11 +7,13 @@ import (
 	"time"
 )
 
+// LocalDisk implements saving to local storage
 type LocalDisk struct {
 	File      string
 	Directory string
 }
 
+// StoreData will save data to a specified log file
 func (save *LocalDisk) StoreData(data string) {
 	logfile, err := save.getLogFile()
 	if err != nil {
