@@ -1,4 +1,4 @@
-package api
+package client
 
 import (
 	"net/http"
@@ -6,27 +6,32 @@ import (
 	"testing"
 
 	"encoding/json"
-
-	"github.com/WestCoastOpenSource/GameStore/pkg/testutils"
 )
 
+func newServerClient() *ServerClient {
+	server := ServerClient{}
+	return &server
+}
+
 func TestServerStatusReturnsOK(t *testing.T) {
-	cli := Start()
+	router := http.NewServeMux()
+	cli := newServerClient()
+
+	router.Handle(ServerStatus, cli.HandleServerStatus())
 
 	r, err := http.NewRequest("GET", ServerStatus, nil)
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
-	testutils.AuthenticateJWTRoute(r)
 
 	w := httptest.NewRecorder()
-	cli.Handler.ServeHTTP(w, r)
+	router.ServeHTTP(w, r)
 
 	if w.Code != http.StatusOK {
 		t.Errorf("Expected %v, but got %v", http.StatusOK, w.Code)
 	}
 
-	resp := Response{}
+	resp := ServerResponse{}
 	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
 		t.Fatalf(err.Error())
 	}
