@@ -3,6 +3,9 @@ package client
 // ServerStatus checks the current status of the server
 const ServerStatus = "/api/server/status"
 
+// ServerTime returns the current UTC time and returns yy-MM-dd HH:mm:ss
+const ServerTime = "/api/server/time"
+
 // FacebookLogin calls the FB api and initiates login request
 const FacebookLogin = "/api/facebook/login"
 

@@ -8,6 +8,7 @@ import (
 	"github.com/WestCoastOpenSource/GameStore/api"
 	"github.com/WestCoastOpenSource/GameStore/api/client"
 	"github.com/WestCoastOpenSource/GameStore/pkg/auth"
+	"github.com/WestCoastOpenSource/GameStore/pkg/clock"
 	"github.com/WestCoastOpenSource/GameStore/pkg/logger"
 	"github.com/WestCoastOpenSource/GameStore/pkg/storage"
 	cache "github.com/patrickmn/go-cache"
@@ -35,6 +36,7 @@ func main() {
 
 func newServerClient(logs logger.FileSystemLogs) *client.ServerClient {
 	server := client.ServerClient{Logger: logs}
+	server.Clock = clock.ServerClock{}
 	return &server
 }
 
