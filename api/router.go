@@ -36,8 +36,9 @@ func (router GameStoreRouter) facebookRoutes() {
 }
 
 func (router GameStoreRouter) serverRoutes() {
+	sha := auth.SHA256Middleware{}
 	router.HTTPHandler.Handle(client.ServerStatus, router.ServerClient.HandleServerStatus())
-	router.HTTPHandler.Handle(client.ServerTime, router.ServerClient.HandleServerTime())
+	router.HTTPHandler.Handle(client.ServerTime, sha.Handler(router.ServerClient.HandleServerTime()))
 }
 
 func (router GameStoreRouter) resourceRoutes() {
