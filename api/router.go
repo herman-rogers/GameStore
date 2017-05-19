@@ -37,6 +37,7 @@ func (router GameStoreRouter) facebookRoutes() {
 
 func (router GameStoreRouter) serverRoutes() {
 	router.HTTPHandler.Handle(client.ServerStatus, router.ServerClient.HandleServerStatus())
+	router.HTTPHandler.Handle(client.ServerTime, router.ServerClient.HandleServerTime())
 }
 
 func (router GameStoreRouter) resourceRoutes() {
